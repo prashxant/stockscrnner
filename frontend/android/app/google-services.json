@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "644912730707",
+    "project_id": "stockscrneer-66cbf",
+    "storage_bucket": "stockscrneer-66cbf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:644912730707:android:362c066b8ac175d71d2ca6",
+        "android_client_info": {
+          "package_name": "com.example.stock_screener"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyisD8wC6nPzO8S-d4qHHsAIvGE3k8Rk8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

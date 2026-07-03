@@ -4,15 +4,22 @@ import 'package:firebase_core/firebase_core.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_mode_controller.dart';
 import 'routes/app_router.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase (Requires Firebase CLI configuration later)
+  // Initialize Firebase using the generated options
   try {
-    await Firebase.initializeApp();
-  } catch (e) {
-    debugPrint('Firebase initialization warning: $e');
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } on UnsupportedError catch (error) {
+    debugPrint('Firebase initialization failed: $error');
+    rethrow;
+  } catch (error, stackTrace) {
+    debugPrint('Firebase initialization failed: $error\n$stackTrace');
+    rethrow;
   }
 
   runApp(const ProviderScope(child: StockScreenerApp()));

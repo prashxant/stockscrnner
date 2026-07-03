@@ -1,11 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../features/auth/presentation/providers/auth_provider.dart';
 
 class ApiClient {
   final Dio dio;
+  final FirebaseAuth auth;
 
-  ApiClient({required this.dio}) {
+  ApiClient({required this.dio, required this.auth}) {
     dio.options.baseUrl =
         'http://localhost:3000/api'; // Replace with env config
     dio.options.connectTimeout = const Duration(seconds: 10);
@@ -14,7 +16,7 @@ class ApiClient {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          final user = FirebaseAuth.instance.currentUser;
+          final user = auth.currentUser;
           if (user != null) {
             final token = await user.getIdToken();
             if (token != null) {
@@ -30,7 +32,7 @@ class ApiClient {
               requestOptions.extra['authRetry'] != true;
 
           if (shouldRetry) {
-            final user = FirebaseAuth.instance.currentUser;
+            final user = auth.currentUser;
             if (user != null) {
               final refreshedToken = await user.getIdToken(true);
               requestOptions.headers['Authorization'] =
@@ -61,5 +63,6 @@ final dioProvider = Provider<Dio>((ref) {
 
 final apiClientProvider = Provider<ApiClient>((ref) {
   final dio = ref.watch(dioProvider);
-  return ApiClient(dio: dio);
+  final auth = ref.watch(firebaseAuthProvider);
+  return ApiClient(dio: dio, auth: auth);
 });

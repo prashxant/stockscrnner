@@ -15,6 +15,11 @@ final authControllerProvider = AsyncNotifierProvider<AuthController, void>(
   AuthController.new,
 );
 
+const String _googleWebClientId = String.fromEnvironment(
+  'GOOGLE_WEB_CLIENT_ID',
+  defaultValue: '',
+);
+
 class AuthController extends AsyncNotifier<void> {
   @override
   Future<void> build() async {
@@ -25,8 +30,20 @@ class AuthController extends AsyncNotifier<void> {
     state = const AsyncLoading();
 
     try {
+      if (_googleWebClientId.isEmpty) {
+        throw FirebaseAuthException(
+          code: 'missing-google-web-client-id',
+          message:
+              'Google sign-in needs GOOGLE_WEB_CLIENT_ID. Configure the Firebase '
+              'OAuth client for this app and pass it with --dart-define.',
+        );
+      }
+
       final googleSignIn = GoogleSignIn.instance;
-      await googleSignIn.initialize();
+      await googleSignIn.initialize(
+        clientId: _googleWebClientId,
+        serverClientId: _googleWebClientId,
+      );
 
       final googleUser = await googleSignIn.authenticate();
 
